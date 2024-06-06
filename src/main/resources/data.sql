@@ -106,3 +106,18 @@ INSERT IGNORE INTO reviews (id, house_id, user_id, score, comment_text) VALUES (
 INSERT IGNORE INTO reviews (id, house_id, user_id, score, comment_text) VALUES (12, 1, 1, 5, 'また利用したいです。');
 INSERT IGNORE INTO reviews (id, house_id, user_id, score, comment_text) VALUES (13, 2, 1, 5, 'また泊まりたいです。');
 
+
+
+
+--favoritesテーブル
+INSERT IGNORE INTO favorites (id, house_id, user_id) VALUES (1, 5, 1);
+INSERT IGNORE INTO favorites (id, house_id, user_id) VALUES (2, 3, 1);
+INSERT IGNORE INTO favorites (id, house_id, user_id) VALUES (3, 8, 1);
+INSERT IGNORE INTO favorites (id, house_id, user_id) VALUES (4, 57, 1);
+INSERT IGNORE INTO favorites (id, house_id, user_id) VALUES (5, 45, 1);
+INSERT IGNORE INTO favorites (id, house_id, user_id) VALUES (6, 32, 1);
+INSERT IGNORE INTO favorites (id, house_id, user_id) VALUES (7, 19, 1); 
+INSERT IGNORE INTO favorites (id, house_id, user_id) VALUES (8, 11, 1);
+INSERT IGNORE INTO favorites (id, house_id, user_id) VALUES (9, 23, 1);
+INSERT IGNORE INTO favorites (id, house_id, user_id) VALUES (10,39, 1);
+INSERT IGNORE INTO favorites (id, house_id, user_id) VALUES (11, 51, 1);
