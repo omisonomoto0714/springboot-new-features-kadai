@@ -42,7 +42,7 @@ public class FavoriteController {
 			@PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable, Model model) {
 
 		User user = userDetailsImpl.getUser();
-		Page<Favorite> favoritePage = favoriteRepository.findByUser(user, pageable);
+		Page<Favorite> favoritePage = favoriteRepository.OrderByCreatedAtDesc(user, pageable);
 
 		model.addAttribute("favoritePage", favoritePage);
 
@@ -54,7 +54,7 @@ public class FavoriteController {
 	
 	@PostMapping("/houses/{houseId}/favorites/create")
 	public String create(@PathVariable(name = "houseId") Integer houseId,
-			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, RedirectAttributes redirectAttributes) {
+			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl, RedirectAttributes redirectAttributes,Model model) {
 
 		House house = houseRepository.getReferenceById(houseId);
 		User user = userDetailsImpl.getUser();
