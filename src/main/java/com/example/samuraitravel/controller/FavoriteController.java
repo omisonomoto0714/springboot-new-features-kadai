@@ -42,7 +42,7 @@ public class FavoriteController {
 			@PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable, Model model) {
 
 		User user = userDetailsImpl.getUser();
-		Page<Favorite> favoritePage = favoriteRepository.OrderByCreatedAtDesc(user, pageable);
+		Page<Favorite> favoritePage = favoriteRepository.findByUserOrderByCreatedAtDesc(user, pageable);
 
 		model.addAttribute("favoritePage", favoritePage);
 
@@ -69,9 +69,8 @@ public class FavoriteController {
 	public String delete(@PathVariable(name = "favoriteId") Integer favoriteId,@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
 			RedirectAttributes redirectAttributes) {
 		
-//		House house = houseRepository.getReferenceById(favoriteId);
-//        User user = userDetailsImpl.getUser();
-//        favoriteService.delete(house, user);
+		
+        favoriteRepository.deleteById(favoriteId);
 
 		redirectAttributes.addFlashAttribute("successMessage", "お気に入りを解除しました。");
 		return "redirect:/houses/houseId";

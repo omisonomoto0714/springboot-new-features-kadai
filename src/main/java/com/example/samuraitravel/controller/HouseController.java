@@ -14,13 +14,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.samuraitravel.entity.Favorite;
 import com.example.samuraitravel.entity.House;
 import com.example.samuraitravel.entity.Review;
 import com.example.samuraitravel.entity.User;
 import com.example.samuraitravel.form.ReservationInputForm;
+import com.example.samuraitravel.repository.FavoriteRepository;
 import com.example.samuraitravel.repository.HouseRepository;
 import com.example.samuraitravel.repository.ReviewRepository;
 import com.example.samuraitravel.security.UserDetailsImpl;
+import com.example.samuraitravel.service.FavoriteService;
 import com.example.samuraitravel.service.ReviewService;
 
 @Controller
@@ -29,12 +32,16 @@ public class HouseController {
 	private final HouseRepository houseRepository;
 	private final ReviewRepository reviewRepository;
 	private final ReviewService reviewService;
+	private final FavoriteService favoriteService;
+	private final FavoriteRepository favoriteRepository;
 
 	public HouseController(HouseRepository houseRepository, ReviewRepository reviewRepository,
-			ReviewService reviewService) {
+			ReviewService reviewService, FavoriteService favoriteService, FavoriteRepository favoriteRepository) {
 		this.houseRepository = houseRepository;
 		this.reviewRepository = reviewRepository;
 		this.reviewService = reviewService;
+		this.favoriteService = favoriteService;
+		this.favoriteRepository = favoriteRepository;
 	}
 
 	@GetMapping
@@ -86,25 +93,33 @@ public class HouseController {
 	@GetMapping("/{id}")
 	public String show(@PathVariable(name = "id") Integer id, Model model,
 			@AuthenticationPrincipal UserDetailsImpl userDetailsImpl) {
-		
+
 		House house = houseRepository.getReferenceById(id);
 		boolean hasUserAlreadyReviewed = false;
-		     
-		if(userDetailsImpl != null) {
+		
+		
+		Favorite favorite = null;
+		boolean hasFavorite = false;
+
+		if (userDetailsImpl != null) {
 			User user = userDetailsImpl.getUser();
 			hasUserAlreadyReviewed = reviewService.hasUserAlreadyReviewed(house, user);
-		}                     
-                                     
-		                                         
+			hasFavorite = favoriteService.hasFavorite(house,user);
+			if(hasFavorite) {
+				favorite = favoriteRepository.findByHouseAndUser(house,user);
+			}
+		}
+
 		List<Review> newReviews = reviewRepository.findTop6ByHouseOrderByCreatedAtDesc(house);
 		long totalReviewCount = reviewRepository.countByHouse(house);
-		
-		
+
 		model.addAttribute("house", house);
 		model.addAttribute("reservationInputForm", new ReservationInputForm());
 		model.addAttribute("hasUserAlreadyReviewed", hasUserAlreadyReviewed);
 		model.addAttribute("newReviews", newReviews);
 		model.addAttribute("totalReviewCount", totalReviewCount);
+		model.addAttribute("favorite", favorite);
+		model.addAttribute("hasFavorite", hasFavorite);
 
 		return "houses/show";
 	}

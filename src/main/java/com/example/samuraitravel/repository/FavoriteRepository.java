@@ -12,7 +12,7 @@ import com.example.samuraitravel.entity.User;
 
 public interface FavoriteRepository extends JpaRepository<Favorite, Integer>{
 	
-	public Page<Favorite> findByUser(User user,Pageable pageable);
+	public Page<Favorite> findByUserOrderByCreatedAtDesc(User user,Pageable pageable);
 	public Favorite findByHouseAndUser(House house, User user);
 	
 
