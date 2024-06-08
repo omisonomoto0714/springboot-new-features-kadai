@@ -66,13 +66,13 @@ public class FavoriteController {
 	}
 
 	@PostMapping("/houses/{houseId}/favorites/{favoriteId}/delete")
-	public String delete(@PathVariable(name = "favoriteId") Integer favoriteId,@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+	public String delete(@PathVariable(name = "favoriteId") Integer favoriteId,
 			RedirectAttributes redirectAttributes) {
 		
 		
         favoriteRepository.deleteById(favoriteId);
 
 		redirectAttributes.addFlashAttribute("successMessage", "お気に入りを解除しました。");
-		return "redirect:/houses/houseId";
+		return "redirect:/houses/{houseId}";
 	}
 }
