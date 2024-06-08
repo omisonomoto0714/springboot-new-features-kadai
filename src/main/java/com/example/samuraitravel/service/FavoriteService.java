@@ -1,44 +1,48 @@
 package com.example.samuraitravel.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.example.samuraitravel.entity.Favorite;
 import com.example.samuraitravel.entity.House;
 import com.example.samuraitravel.entity.User;
 import com.example.samuraitravel.repository.FavoriteRepository;
-import com.example.samuraitravel.repository.HouseRepository;
-import com.example.samuraitravel.repository.UserRepository;
 
 @Service
 public class FavoriteService {
 	private final FavoriteRepository favoriteRepository;
-	private final HouseRepository houseRepository;
-	private final UserRepository userRepository;
 
-	public FavoriteService(FavoriteRepository favoriteRepository, HouseRepository houseRepository,
-			UserRepository userRepository) {
+	public FavoriteService(FavoriteRepository favoriteRepository) {
 
 		this.favoriteRepository = favoriteRepository;
-		this.houseRepository = houseRepository;
-		this.userRepository = userRepository;
+
 	}
 
 	//お気に入り追加
-//	@Transactional
-//	public void
-//	Favorite favorite=new Favorite();
-//	}
+	@Transactional
+	public void create(House house, User user) {
+		if (!hasFavorite(house, user)) {
+			Favorite favorite = new Favorite();
 
-	public boolean keep(House house, User user) {
+			favorite.setHouse(house);
+			favorite.setUser(user);
+
+			favoriteRepository.save(favorite);
+		}
+	}
+
+	public boolean hasFavorite(House house, User user) {
 
 		return favoriteRepository.findByHouseAndUser(house, user) != null;
 
 	}
 
-	//	@Transactional
-	//	public void keep (FavoriteKeepForm favoriteKeepForm) {
-	//		
-	//		
-	//	}
-	//	favorite.setHouse(favoriteKeepForm.getHaouse)
+	@Transactional
+	public void delete(House house, User user) {
+		Favorite favorite = favoriteRepository.findByHouseAndUser(house, user);
+		if (favorite != null) {
+			favoriteRepository.delete(favorite);
+		}
+	}
 
 }
