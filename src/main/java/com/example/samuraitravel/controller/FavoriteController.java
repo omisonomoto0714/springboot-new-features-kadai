@@ -49,26 +49,7 @@ public class FavoriteController {
 		return "favorites/index";
 	}
 
-	//ここから追加分
-	@GetMapping("/houses/{houseId}")
-	public String show(@PathVariable(name = "houseId") Integer houseId, @AuthenticationPrincipal UserDetailsImpl userDetailsImpl, Model model) {
-        House house = houseRepository.getReferenceById(houseId);
-        User user = userDetailsImpl.getUser();
-        boolean hasFavorite = favoriteService.hasFavorite(house, user);
-        
-        model.addAttribute("house", house);
-        model.addAttribute("hasFavorite", hasFavorite);
-	
-        if(hasFavorite) {
-        Favorite favorite = favoriteRepository.findByHouseAndUser(house, user);
-        
-            model.addAttribute("favoriteId", favorite.getId());
-        }
 
-        return "houses/show"; 
-    }
-	
-	//ここまで
 	
 	
 	@PostMapping("/houses/{houseId}/favorites/create")
@@ -80,19 +61,19 @@ public class FavoriteController {
 
 		favoriteService.create(house, user);
 
-		redirectAttributes.addAttribute("successMessage", "お気に入りに追加しました。");
-		return  "redirect:/houses/" + houseId;
+		redirectAttributes.addFlashAttribute("successMessage", "お気に入りに追加しました。");
+		return  "redirect:/houses/{houseId}";
 	}
 
-	@PostMapping("/houses/{houseId}/favorites/delete")
-	public String delete(@PathVariable(name = "houseId") Integer houseId,@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
+	@PostMapping("/houses/{houseId}/favorites/{favoriteId}/delete")
+	public String delete(@PathVariable(name = "favoriteId") Integer favoriteId,@AuthenticationPrincipal UserDetailsImpl userDetailsImpl,
 			RedirectAttributes redirectAttributes) {
 		
-		House house = houseRepository.getReferenceById(houseId);
-        User user = userDetailsImpl.getUser();
-        favoriteService.delete(house, user);
+//		House house = houseRepository.getReferenceById(favoriteId);
+//        User user = userDetailsImpl.getUser();
+//        favoriteService.delete(house, user);
 
 		redirectAttributes.addFlashAttribute("successMessage", "お気に入りを解除しました。");
-		return "redirect:/houses/" + houseId;
+		return "redirect:/houses/houseId";
 	}
 }
